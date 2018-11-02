@@ -4,13 +4,10 @@ d3.select("#dropdown").on("change", wrapperFunction);
 // process the user selected option
 function processCategory(data){
   var category = document.getElementById("dropdown").value;
-  // const validCategories = new Set(['neighborhood', 'zip_code', 'residential_units', 'commercial_units', 'total_units', 'land_sqft', 'gross_sqft', 'year_built', 'NumFloors', 'year_of_sale', 'sale_price']);
   var arr = [];
-  // if (validCategories.has(category)){
-    for (var i = 0; i < 500; i++){
-      arr.push(data.data[i][category]);
-    }
-  // }
+  for (var i = 0; i < 500; i++){
+    arr.push(data.data[i][category]);
+  }
   return [arr, category];
 }
 
@@ -23,7 +20,7 @@ function processXAxisDict() {
   dict["total_units"] = "Total Units"
   dict["land_sqft"] = "Land Square Footage"
   dict["gross_sqft"] = "Gross Square Footage"
-  dict["year_built"] = "Year Build"
+  dict["year_built"] = "Year Built"
   dict["NumFloors"] = "Number of Floors"
   dict["year_of_sale"] = "Year of Sale"
   dict["sale_price"] = "Sale Price"
@@ -106,7 +103,7 @@ function processData(data){
       .range([0, width])
       .domain(binsMaxes.map((d) => d))
   var y = d3.scaleLinear()
-    .domain([0,maxFreq])
+    .domain([0,maxFreq + (maxFreq % 10)])
     .range([height,0]);
 
   var tip = d3.tip()
