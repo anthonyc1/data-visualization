@@ -175,7 +175,7 @@ function processData(data){
                 .attr("y", (d) => y(d) - 10);
               })
             .on("mouseout", function(d,i){
-          d3.select(this)
+              d3.select(this)
                 .attr("height", (d) => height - y(d))
                 .attr("width", x.bandwidth())
                 .attr("y", (d) => y(d));

@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>Brooklyn Home Sales Dataset Interactive</title>
+    
+    <!-- Bootstrap CSS CDN -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <!-- jQuery CDN - Slim version (=without AJAX) -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <!-- Popper.JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>
+    <!-- Bootstrap JS -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
+     <!-- Font Awesome JS -->
+    <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/solid.js" integrity="sha384-tzzSw1/Vo+0N5UhStP3bvwWPq+uvzCMfrN1fEFe+xBmv1C/AtVX5K0uZtmcHitFZ" crossorigin="anonymous"></script>
+    <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/fontawesome.js" integrity="sha384-6OIrr52G08NpOFSZdxxz1xdNSndlD4vdcf/q2myIUVO0VsqaGHJsB0RaBE01VTOY" crossorigin="anonymous"></script>
+    <!-- Tooltip library for D3 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-tip/0.9.1/d3-tip.min.js"></script>
+
+
+    <!-- Our Custom CSS -->
+    <link rel="stylesheet" type="text/css" href="../css/styles.css">
+
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+</head>
+
+<body>
+    <div class="wrapper">
+
+        <!-- Sidebar -->
+        <nav id="sidebar">
+            <div class="sidebar-header">
+            <h3>Data Visualizations</h3>
+        </div>
+
+        <ul class="list-unstyled components">
+            <p>Choose one:</p>
+            <li>
+                <a href="./index.html">Bar Graph</a>
+            </li>
+            <li>
+                <a href="./bivariate.html">Bivariate Scatterplot</a>
+            </li>
+            <li>
+                <a href="./correlation.html">10x10 Correlation Matrix</a>
+            </li>
+            <li>
+                <a href="./scatterplot.html">5x5 Scatter Plot Matrix</a>
+            </li>
+            <li>
+                <a href="./pc.html">Parallel Coordinates Display</a>
+            </li>
+            <li>
+                <a href="./pca.html">PCA Plot w/ Scree Plot</a>
+            </li>
+            <li>
+                <a href="./biplot.html">Biplot w/ 10 Projected Axes</a>
+            </li>
+            <li>
+                <a href="./mds_data.html">MDS Display of Data</a>
+            </li>
+            <li class="active">
+                <a href="./mds_attributes.html">MDS Display of Attributes</a>
+            </li>
+        </ul>
+        </nav>
+
+        <!-- Page Content -->
+        <div id="content">
+            <button type="button" id="sidebarCollapse" class="btn btn-info">
+                <i class="fas fa-align-left"></i>
+                <span>Toggle Sidebar</span>
+            </button>
+            <!-- We'll fill this with dummy content -->
+            <h1>Brooklyn Home Sale Prices Dataset Interactive</h1>
+            <p>Select a category:
+                <select id="dropdown">
+                    <option value="">--</option>
+                    <option value="zip_code">zip code</option>
+                    <option value="residential_units">residential units</option>
+                    <option value="commercial_units">commercial units</option>
+                    <option value="total_units">total units</option>
+                    <option value="land_sqft">land sqft</option>
+                    <option value="gross_sqft">gross sqft</option>
+                    <option value="year_built">year built</option>
+                    <option value="NumFloors">num floors</option>
+                    <!-- <option value="year_of_sale">year of sale</option> -->
+                    <option value="sale_price">sale price</option>
+                </select>
+            </p>
+            <hr>
+            <div id="chart"></div>
+        </div>
+    </div>
+</body>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+    $('#sidebarCollapse').on('click', function () {
+        $('#sidebar').toggleClass('active');
+    });
+
+});
+</script>
+<script type="text/javascript" src="../data.js"></script>
+<script type="text/javascript" src="../js/barchart.js"></script>
+</html>
