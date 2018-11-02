@@ -34,13 +34,17 @@ function processXAxisDict() {
 // main function to display bar chart
 function processData(data){
 
-  // Obtain the array of data for user-selected category
+  // Get data array for selected categories
   var obj = processCategory(data);
+
+  // Get x-axis label dictionary
   var dict = processXAxisDict();
+
+  // Parse data arrays
   var data_arr = obj[0];
   var category = obj[1];
 
-  // set up variables
+  // Set graph dimensions and margins
   var margin = {top: 40, right: 20, bottom: 40, left: 40},
     height = 500,
     width = 700,
@@ -62,8 +66,6 @@ function processData(data){
       range = max - min;
       interval = Math.floor(range/numOfBuckets);
   }
-
-  console.log(interval);
 
   // set up array bins and binsMaxes to use later
   for (var i = min; i <= max; i += interval){
@@ -99,12 +101,10 @@ function processData(data){
     arr.push(val);
   }
 
-  // create x-axis scale
+  // Set ranges
   var x = d3.scaleBand()
       .range([0, width])
       .domain(binsMaxes.map((d) => d))
-
-  // create y-axis scale  
   var y = d3.scaleLinear()
     .domain([0,maxFreq])
     .range([height,0]);
@@ -155,18 +155,13 @@ function processData(data){
       .attr("transform", "translate("+ (-margin.left) +","+(height/2)+")rotate(-90)") 
     .text("Frequency");
 
-  // // add values of each bar above bar in chart
-  // var text = svg.selectAll(".text")
-  //     .data(arr)
-  //     .enter()
-  //     .append("text")
-  //     //.attr("visibility", "hidden")
-  //     .attr("x", function (d,i ) { return i * x.bandwidth() + 15})
-  //     .attr("y", (d) => y(d) - 5)
-  //     .attr("text-anchor", "middle")
-  //     .text(function(d) {
-  //         return d;
-  // });
+  // Make a title
+  svg.append("text")
+      .attr("x", (width / 2))
+      .attr("y", 0 - (margin.top / 2))
+      .attr("text-anchor", "middle")
+      .style("font-size", "20px")
+      .text("Frequency Bar Chart for " + dict[category]);
 
   // create barchart and load data
   var bars = svg.selectAll("rect")
