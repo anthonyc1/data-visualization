@@ -56,6 +56,14 @@ function processData(data){
   var range = max - min;
   var numOfBuckets = 20;
   var interval = Math.floor(range/numOfBuckets);
+  if (category == 'year_of_sale') {
+      max = 2018;
+      min = 1998;
+      range = max - min;
+      interval = Math.floor(range/numOfBuckets);
+  }
+
+  console.log(interval);
 
   // set up array bins and binsMaxes to use later
   for (var i = min; i <= max; i += interval){
