@@ -135,16 +135,18 @@ function processData(data){
       .attr("cx", (d)=> {return x(d[0]);})
       .attr("cy", (d)=> {return y(d[1]);})
 
-  // var tip = d3.tip()
-  //   .attr('class', 'd3-tip')
-  //   .offset([-10, 0])
-  //   .html(function(d) {
-  //     return "<strong>"+dict[category1]+":</strong> <span style='color:#47ffb5'>" + x(d[0]) + "</span><br>" +
-  //      "<strong>"+dict[category2]+":</strong> <span style='color:#47ffb5'>" + x(d[1]) + "</span>";
-  // })
+  var tip = d3.tip()
+    .attr('class', 'd3-tip')
+    .offset([-10, 0])
+    .html(function(d) {
+      return "<strong>"+dict[category1]+":</strong> <span style='color:#47ffb5'>" + x(d[0]) + "</span><br>" +
+       "<strong>"+dict[category2]+":</strong> <span style='color:#47ffb5'>" + x(d[1]) + "</span>";
+  })
 
-  // circles.on('mouseover', tip.show)
-  //     .on('mouseout', tip.hide)
+  circles.on('mouseover', tip.show)
+      .on('mouseout', tip.hide)
+
+  svg.call(tip);
 }
 
 // wrapper function to kick off whole process

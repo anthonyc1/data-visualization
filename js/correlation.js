@@ -79,14 +79,14 @@ function processData(data){
   var dict = processXAxisDict();
 
   // Set graph dimensions and margins
-  var margin = {top: 40, right: 20, bottom: 40, left: 40},
+  var margin = {top: 40, right: 20, bottom: 40, left: 60},
     height = 500,
     width = 700,
     barWidth = 30,
     barOffset = 15;
 
   var axesLabels = obtainLabelsForAxes(labels, dict);
-  
+
   // Set ranges
   var x = d3.scaleBand()
       .domain(axesLabels)
@@ -94,13 +94,6 @@ function processData(data){
   var y = d3.scaleBand()
     .domain(axesLabels)
     .rangeRound([height,0]);
-
-  // var tip = d3.tip()
-  //   .attr('class', 'd3-tip')
-  //   .offset([-10, 0])
-  //   .html(function(d) {
-  //     return "<strong>"+category1+":</strong> <span style='color:#47ffb5'>" + d + "</span>";
-  // })
 
   // create svg
   var svg = d3.select("#chart").append("svg")
@@ -127,20 +120,6 @@ function processData(data){
     .call(d3.axisLeft(y)
       );
 
-  // add x axis label
-  svg.append("text")
-    .style("font", "14px arial")
-    .attr("text-anchor", "middle") 
-      .attr("transform", "translate("+ (width/2) +","+(height+2*margin.top)+")") 
-    .text("Variables");
-
-  // add y axis label
-  svg.append("text")
-    .style("font", "14px arial")
-    .attr("text-anchor", "middle") 
-      .attr("transform", "translate("+ (-margin.left) +","+(height/2)+")rotate(-90)") 
-    .text("Variables");
-
   // Make a title
   svg.append("text")
       .attr("x", (width / 2))
@@ -150,37 +129,47 @@ function processData(data){
       .text("Correlation Matrix");
 
   var colorMap = d3.scaleLinear()
-      .domain([-1,1])
-      .range([startColor, endColor]);
+      .domain([-1,0,1])
+      .range([startColor,"white", endColor]);
 
   var row = svg.selectAll(".row")
       .data(correlationMatrix)
       .enter().append("g")
       .attr("class", "row")
-      .attr("transform", function(d, i) { return "translate(0," + i + ")"; });
+      .attr("transform", function(d, i) { return "translate(0," + y(axesLabels[i]) + ")"; });
 
   var cell = row.selectAll(".cell")
       .data(function(d) { return d; })
-      .enter().append("g")
+      .enter().append("rect")
       .attr("class", "cell")
-      .attr("transform", function(d, i) { return "translate(" + i + ", 0)"; });
+      .attr("height", (height)/10)
+      .attr("width", (width)/10)
+      .attr("transform", function(d, i) { return "translate(" + x(axesLabels[i]) + ", 0)"; })
+      .on('mouseover', function() {
+        d3.select(this)
+            .style('stroke', '#0F0')
+            .style('stroke-width', 2);
+       })
+       .on('mouseout', function() {
+          d3.select(this)
+              .style('stroke', colorMap);
+       });
 
-  // cell.append('rect')
-  //     .attr("width", x.rangeBand())
-  //     .attr("height", y.rangeBand())
-  //     .style("stroke-width", 0);
-
-    // cell.append("text")
-    //   .attr("dy", ".32em")
-    //   .attr("x", x.rangeBand() / 2)
-    //   .attr("y", y.rangeBand() / 2)
-    //   .attr("text-anchor", "middle")
-    //   .style("fill", function(d, i) { return d >= maxValue/2 ? 'white' : 'black'; })
-    //   .text(function(d, i) { return d; });
-      
   row.selectAll(".cell")
       .data(function(d, i) { return correlationMatrix[i]; })
       .style("fill", colorMap);
+
+  var tip = d3.tip()
+    .attr('class', 'd3-tip')
+    .offset([-10, 0])
+    .html(function(d, i) {
+      return "<strong>Correlation:</strong> <span style='color:#47ffb5'>" + d + "</span>";
+  })
+
+  cell.on('mouseover', tip.show)
+      .on('mouseout', tip.hide)
+
+  svg.call(tip);
 }
 
 // wrapper function to kick off whole process
