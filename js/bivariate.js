@@ -1,6 +1,4 @@
-// dynamically load bar chart upon menu change
-d3.select("#dropdown1").on("change", wrapperFunction);
-d3.select("#dropdown2").on("change", wrapperFunction);
+d3.select("#submit").on("click", wrapperFunction);
 
 // process the user selected option
 function processCategory(data, elementId){
@@ -71,23 +69,27 @@ function processData(data){
 
   // Set ranges
   var x = d3.scaleLinear()
-      //.domain(Math.min(...data_arr1), Math.max(...data_arr1))
+      .domain([Math.min(...data_arr1), Math.max(...data_arr1)])
       .range([0, width]);
   var y = d3.scaleLinear()
-    //.domain(Math.min(...data_arr2), Math.max(...data_arr2))
+    .domain([Math.min(...data_arr2), Math.max(...data_arr2)])
     .range([height,0]);
 
-console.log("min " + Math.min(...data_arr2))
-console.log("min2 " + Math.min(...data_arr1))
+  // var tip = d3.tip()
+  //   .attr('class', 'd3-tip')
+  //   .offset([-10, 0])
+  //   .html(function(d) {
+  //     return "<strong>"+category1+":</strong> <span style='color:#47ffb5'>" + d + "</span>";
+  // })
 
   // create svg
   var svg = d3.select("#chart").append("svg")
-              .attr("width", width + 2*margin.left + margin.right)
-              .attr("height", height + 2*margin.top + 2*margin.bottom)
-              .style('background', '#fafafa')
-            .append("g")
-            .attr("transform", 
-                "translate(" + 2*margin.left + "," + margin.top + ")");
+      .attr("width", width + 2*margin.left + margin.right)
+      .attr("height", height + 2*margin.top + 2*margin.bottom)
+      .style('background', '#fafafa')
+    .append("g")
+    .attr("transform", 
+        "translate(" + 2*margin.left + "," + margin.top + ")");
 
 // add x axis to chart
   svg.append("g")
@@ -126,20 +128,18 @@ console.log("min2 " + Math.min(...data_arr1))
       .attr("text-anchor", "middle")
       .style("font-size", "20px")
       .text("Bivariate Scatterplot for "+ dict[category1] + " and " + dict[category2]);
-
-console.log(data_arr1[one++])
  
-  svg.selectAll(".dot")
-    .data(data)
+  svg.selectAll("circle")
+    .data(data_arr1)
     .enter().append("circle")
-    .attr("circle", "dot")
-    .attr("cx", function(d) {
-      return x(data_arr1[one++]);
-    })
-    .attr("cy", function(d) {
-      return y(data_arr2[two++]);
-    })
-    .attr("r", 4);
+      .attr("class", "dot")
+      .attr("cx", function(d) {
+        return x(data_arr1[one++]);
+      })
+      .attr("cy", function(d) {
+        return y(data_arr2[two++]);
+      })
+      .attr("r", 4);
 
 }
 

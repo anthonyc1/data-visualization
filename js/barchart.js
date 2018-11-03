@@ -166,7 +166,7 @@ function processData(data){
       .enter().append("rect")
           .attr("class", "bar")
             .attr("width",x.bandwidth())
-            .attr("x", function (d,i ) { return i * x.bandwidth()})
+            .attr("x", function (d,i) { return i * x.bandwidth()})
             .attr("y", height)
             .on("mouseover", function(d,i) {
               d3.select(this)
