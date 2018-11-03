@@ -1,3 +1,4 @@
+/* HTML Page Styling */
 html {
 	margin: 0px;
 }
@@ -8,6 +9,12 @@ html {
     align-items: stretch;
 }
 
+#content {
+  margin-top: 20px;
+  margin-left: 20px;
+}
+
+/* Sidebar styling */
 #sidebar {
     min-width: 250px;
     max-width: 250px;
@@ -100,11 +107,7 @@ ul ul a {
     background: #6d7fcc;
 }
 
-#content {
-  margin-top: 20px;
-  margin-left: 20px;
-}
-
+/* Chart Styling */
 #chart {
 	margin-top: 20px;
   margin-left: 20px;
@@ -122,21 +125,7 @@ ul ul a {
   shape-rendering: crispEdges;
 }
 
-.bar {
-  fill: black;
-  stroke: black;
-  stroke-width: 1
-}
-
-.bar:hover {
-  fill: #47ffb5
-}
-
-.dot { 
-  stroke: steelblue;
-  fill: steelblue; 
-}
-
+/* Tooltip Styling */
 .d3-tip {
   line-height: 1;
   font-weight: bold;
@@ -146,7 +135,6 @@ ul ul a {
   border-radius: 2px;
 }
 
-/* Creates a small triangle extender for the tooltip */
 .d3-tip:after {
   box-sizing: border-box;
   display: inline;
@@ -159,9 +147,26 @@ ul ul a {
   text-align: center;
 }
 
-/* Style northward tooltips differently */
 .d3-tip.n:after {
   margin: -1px 0 0 0;
   top: 100%;
   left: 0;
+}
+
+/* Bar Graph Styling */
+.bar {
+  fill: black;
+  stroke: black;
+  stroke-width: 1
+}
+
+.bar:hover {
+  fill: #47ffb5
+}
+
+
+/* Bivariate Styling */
+.dot { 
+  stroke: black;
+  fill: black; 
 }

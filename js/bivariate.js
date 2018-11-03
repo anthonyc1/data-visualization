@@ -10,6 +10,14 @@ function processCategory(data, elementId){
   return [arr, category];
 }
 
+function createArrayOfCoordinates(arr1, arr2) {
+  var arr = [];
+  for (var i = 0; i < arr1.length; i++) {
+    arr.push([arr1[i], arr2[i]])
+  }
+  return arr;
+}
+
 function processXAxisDict() {
   var dict = {};
 
@@ -44,28 +52,14 @@ function processData(data){
   var data_arr2 = obj2[0];
   var category2 = obj2[1];
 
+  var data_arr = createArrayOfCoordinates(data_arr1, data_arr2);
+
   // Set graph dimensions and margins
   var margin = {top: 40, right: 20, bottom: 40, left: 40},
     height = 500,
     width = 700,
     barWidth = 30,
     barOffset = 15;
-
-  // var bins = [];
-  // var binsMaxes = [];
-  // var arr = [];
-  // var binCount = 0;
-  // var max = Math.max(...data_arr);
-  // var min = Math.min(...data_arr);
-  // var range = max - min;
-  // var numOfBuckets = 20;
-  // var interval = Math.floor(range/numOfBuckets);
-  // if (category == 'year_of_sale') {
-  //     max = 2018;
-  //     min = 1998;
-  //     range = max - min;
-  //     interval = Math.floor(range/numOfBuckets);
-  // }
 
   // Set ranges
   var x = d3.scaleLinear()
@@ -74,13 +68,6 @@ function processData(data){
   var y = d3.scaleLinear()
     .domain([Math.min(...data_arr2), Math.max(...data_arr2)])
     .range([height,0]);
-
-  // var tip = d3.tip()
-  //   .attr('class', 'd3-tip')
-  //   .offset([-10, 0])
-  //   .html(function(d) {
-  //     return "<strong>"+category1+":</strong> <span style='color:#47ffb5'>" + d + "</span>";
-  // })
 
   // create svg
   var svg = d3.select("#chart").append("svg")
@@ -129,18 +116,35 @@ function processData(data){
       .style("font-size", "20px")
       .text("Bivariate Scatterplot for "+ dict[category1] + " and " + dict[category2]);
  
-  svg.selectAll("circle")
-    .data(data_arr1)
+  // Add the data points
+  var circles = svg.selectAll("circle")
+    .data(data_arr)
     .enter().append("circle")
       .attr("class", "dot")
       .attr("cx", function(d) {
-        return x(data_arr1[one++]);
+        return 0;
       })
       .attr("cy", function(d) {
-        return y(data_arr2[two++]);
+        return height;
       })
       .attr("r", 4);
 
+  circles.transition()
+      .duration(700)
+      .delay(100)
+      .attr("cx", (d)=> {return x(d[0]);})
+      .attr("cy", (d)=> {return y(d[1]);})
+
+  // var tip = d3.tip()
+  //   .attr('class', 'd3-tip')
+  //   .offset([-10, 0])
+  //   .html(function(d) {
+  //     return "<strong>"+dict[category1]+":</strong> <span style='color:#47ffb5'>" + x(d[0]) + "</span><br>" +
+  //      "<strong>"+dict[category2]+":</strong> <span style='color:#47ffb5'>" + x(d[1]) + "</span>";
+  // })
+
+  // circles.on('mouseover', tip.show)
+  //     .on('mouseout', tip.hide)
 }
 
 // wrapper function to kick off whole process
