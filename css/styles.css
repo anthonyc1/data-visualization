@@ -170,3 +170,15 @@ ul ul a {
   stroke: black;
   fill: black; 
 }
+
+/* Scatterplot Styling */
+
+.frame {
+  fill: none;
+}
+
+.cell text {
+  font-weight: bold;
+  text-transform: capitalize;
+  color: #47ffb5;
+}

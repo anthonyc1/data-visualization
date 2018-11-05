@@ -145,19 +145,25 @@ function processData(data){
       .attr("height", (height)/10)
       .attr("width", (width)/10)
       .attr("transform", function(d, i) { return "translate(" + x(axesLabels[i]) + ", 0)"; })
-      .on('mouseover', function() {
-        d3.select(this)
-            .style('stroke', '#0F0')
-            .style('stroke-width', 2);
-       })
-       .on('mouseout', function() {
-          d3.select(this)
-              .style('stroke', colorMap);
-       });
+      .style("opacity", 0)
+      // .on('mouseover', function() {
+      //   d3.select(this)
+      //       .style('stroke', '#0F0')
+      //       .style('stroke-width', 4);
+      //  })
+      //  .on('mouseout', function() {
+      //     d3.select(this)
+      //         .style('stroke', colorMap);
+      //  });
 
   row.selectAll(".cell")
       .data(function(d, i) { return correlationMatrix[i]; })
       .style("fill", colorMap);
+
+  cell.transition()
+    .duration(function(d, i) {return 200 * i})
+    .ease(d3.easeLinear)
+    .style("opacity", 1);
 
   var tip = d3.tip()
     .attr('class', 'd3-tip')

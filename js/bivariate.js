@@ -57,9 +57,7 @@ function processData(data){
   // Set graph dimensions and margins
   var margin = {top: 40, right: 20, bottom: 40, left: 40},
     height = 500,
-    width = 700,
-    barWidth = 30,
-    barOffset = 15;
+    width = 700;
 
   // Set ranges
   var x = d3.scaleLinear()
@@ -139,8 +137,8 @@ function processData(data){
     .attr('class', 'd3-tip')
     .offset([-10, 0])
     .html(function(d) {
-      return "<strong>"+dict[category1]+":</strong> <span style='color:#47ffb5'>" + x(d[0]) + "</span><br>" +
-       "<strong>"+dict[category2]+":</strong> <span style='color:#47ffb5'>" + x(d[1]) + "</span>";
+      return "<strong>"+dict[category1]+":</strong> <span style='color:#47ffb5'>" + d[0] + "</span><br>" +
+       "<strong>"+dict[category2]+":</strong> <span style='color:#47ffb5'>" + d[1] + "</span>";
   })
 
   circles.on('mouseover', tip.show)
