@@ -1,19 +1,17 @@
 d3.select("#submit").on("click", wrapperFunction);
 
-// process the user selected option
-function processCategory(data, elementId){
-  var category = document.getElementById(elementId).value;
+function processCategory(data, category){
   var arr = [];
   for (var i = 0; i < 500; i++){
     arr.push(data.data[i][category]);
   }
-  return [arr, category];
+  return arr;
 }
 
-function createArrayOfCoordinates(arr1, arr2) {
+function createArrayOfAttributes(arr1, arr2, arr3, arr4, arr5, arr6, arr7, arr8, arr9, arr10) {
   var arr = [];
   for (var i = 0; i < arr1.length; i++) {
-    arr.push([arr1[i], arr2[i]])
+    arr.push([arr1[i], arr2[i], arr3[i], arr4[i], arr5[i], arr6[i], arr7[i], arr8[i], arr9[i], arr10[i]])
   }
   return arr;
 }
@@ -38,36 +36,47 @@ function processXAxisDict() {
 // main function to display bar chart
 function processData(data){
 
-  var one = 0, two = 0;
-  // Get data array for selected categories
-  var obj1 = processCategory(data, "dropdown1");
-  var obj2 = processCategory(data, "dropdown2");
+  var labels = ["gross_sqft",
+      "land_sqft",
+      "total_units",
+      "residential_units",
+      "sale_price",
+      "commercial_units",
+      "year_built",
+      "NumFloors",
+      "zip_code",
+      "year_of_sale"]
+
+  var arr1 = processCategory(data, "gross_sqft");
+  var arr2 = processCategory(data, "land_sqft");
+  var arr3 = processCategory(data, "total_units");
+  var arr4 = processCategory(data, "residential_units");
+  var arr5 = processCategory(data, "sale_price");
+  var arr6 = processCategory(data, "commercial_units");
+  var arr7 = processCategory(data, "year_built");
+  var arr8 = processCategory(data, "NumFloors");
+  var arr9 = processCategory(data, "zip_code");
+  var arr10 = processCategory(data, "year_of_sale");
+//5,4,3,1,9,2,6,7,0,8
 
   // Get x-axis label dictionary
   var dict = processXAxisDict();
 
-  // Parse data arrays
-  var data_arr1 = obj1[0];
-  var category1 = obj1[1];
-  var data_arr2 = obj2[0];
-  var category2 = obj2[1];
-
-  var data_arr = createArrayOfCoordinates(data_arr1, data_arr2);
+  var arr = createArrayOfAttributes(arr1, arr2, arr3, arr4, arr5, arr6, arr7, arr8, arr9, arr10);
 
   // Set graph dimensions and margins
-  var margin = {top: 40, right: 20, bottom: 40, left: 40},
-    height = 500,
-    width = 700,
-    barWidth = 30,
-    barOffset = 15;
+  var margin = {top: 30, right: 10, bottom: 10, left: 10},
+    width = 960 - margin.left - margin.right,
+    height = 500 - margin.top - margin.bottom;
 
-  // Set ranges
-  var x = d3.scaleLinear()
-      .domain([Math.min(...data_arr1), Math.max(...data_arr1)])
-      .range([0, width]);
-  var y = d3.scaleLinear()
-    .domain([Math.min(...data_arr2), Math.max(...data_arr2)])
-    .range([height,0]);
+var x = d3.scaleBand().rangeRound([0, width], 1),
+    y = {},
+    dragging = {};
+
+var line = d3.line(),
+    axis = d3.axisLeft(),
+    background,
+    foreground;
 
   // create svg
   var svg = d3.select("#chart").append("svg")
@@ -78,75 +87,108 @@ function processData(data){
     .attr("transform", 
         "translate(" + 2*margin.left + "," + margin.top + ")");
 
-// add x axis to chart
-  svg.append("g")
-    .attr("transform", "translate(0," + height + ")")
-    .call(d3.axisBottom(x))
-      .selectAll("text")
-      .style("text-anchor", "end")
-          .attr("dx", "-.8em")
-          .attr("dy", ".15em")
-      .attr("transform", "rotate(-65)");;
+  // Extract the list of dimensions and create a scale for each.
+  x.domain(labels)
+  labels.forEach(function(attribute) {
+    y[attribute] = d3.scaleLinear()
+    .domain(d3.extent(processCategory(data, attribute)))
+    .range([height, 0]);
+  });
 
-  // add y axis to chart
-  svg.append("g")
-    .call(d3.axisLeft(y)
-        .tickSize(-width)
-      );
+  // Add grey background lines for context.
+  background = svg.append("g")
+      .attr("class", "background")
+    .selectAll("path")
+      .data(arr)
+    .enter().append("path")
+      .attr("d", path);
 
-  // add x axis label
-  svg.append("text")
-    .style("font", "14px arial")
-    .attr("text-anchor", "middle") 
-      .attr("transform", "translate("+ (width/2) +","+(height+2*margin.top)+")") 
-    .text(dict[category1]);
+  // Add blue foreground lines for focus.
+  foreground = svg.append("g")
+      .attr("class", "foreground")
+    .selectAll("path")
+      .data(arr)
+    .enter().append("path")
+      .attr("d", path);
 
-  // add y axis label
-  svg.append("text")
-    .style("font", "14px arial")
-    .attr("text-anchor", "middle") 
-      .attr("transform", "translate("+ (-margin.left) +","+(height/2)+")rotate(-90)") 
-    .text(dict[category2]);
+  // Add a group element for each dimension.
+  var g = svg.selectAll(".dimension")
+      .data(labels)
+    .enter().append("g")
+      .attr("class", "dimension")
+      .attr("transform", function(d) { return "translate(" + x(d) + ")"; })
+      // .call(d3.behavior.drag()
+      //   .origin(function(d) { return {x: x(d)}; })
+      //   .on("dragstart", function(d) {
+      //     dragging[d] = x(d);
+      //     background.attr("visibility", "hidden");
+      //   })
+      //   .on("drag", function(d) {
+      //     dragging[d] = Math.min(width, Math.max(0, d3.event.x));
+      //     foreground.attr("d", path);
+      //     labels.sort(function(a, b) { return position(a) - position(b); });
+      //     x.domain(labels);
+      //     g.attr("transform", function(d) { return "translate(" + position(d) + ")"; })
+      //   })
+      //   .on("dragend", function(d) {
+      //     delete dragging[d];
+      //     transition(d3.select(this)).attr("transform", "translate(" + x(d) + ")");
+      //     transition(foreground).attr("d", path);
+      //     background
+      //         .attr("d", path)
+      //       .transition()
+      //         .delay(500)
+      //         .duration(0)
+      //         .attr("visibility", null);
+      //   }));
 
-  // Make a title
-  svg.append("text")
-      .attr("x", (width / 2))
-      .attr("y", 0 - (margin.top / 2))
-      .attr("text-anchor", "middle")
-      .style("font-size", "20px")
-      .text("Bivariate Scatterplot for "+ dict[category1] + " and " + dict[category2]);
- 
-  // Add the data points
-  var circles = svg.selectAll("circle")
-    .data(data_arr)
-    .enter().append("circle")
-      .attr("class", "dot")
-      .attr("cx", function(d) {
-        return 0;
-      })
-      .attr("cy", function(d) {
-        return height;
-      })
-      .attr("r", 4);
+  // Add an axis and title.
+  g.append("g")
+      .attr("class", "axis")
+      .each(function(d) { d3.select(this).call(axis.scale(y[d])); })
+    .append("text")
+      .style("text-anchor", "middle")
+      .attr("y", -9)
+      .text(function(d) { return dict[d]; });
 
-  circles.transition()
-      .duration(700)
-      .delay(100)
-      .attr("cx", (d)=> {return x(d[0]);})
-      .attr("cy", (d)=> {return y(d[1]);})
+  // // Add and store a brush for each axis.
+  // g.append("g")
+  //     .attr("class", "brush")
+  //     .each(function(d) {
+  //       d3.select(this).call(y[d].brush = d3.svg.brush().y(y[d]).on("brushstart", brushstart).on("brush", brush));
+  //     })
+  //   .selectAll("rect")
+  //     .attr("x", -8)
+  //     .attr("width", 16);
 
-  var tip = d3.tip()
-    .attr('class', 'd3-tip')
-    .offset([-10, 0])
-    .html(function(d) {
-      return "<strong>"+dict[category1]+":</strong> <span style='color:#47ffb5'>" + d[0] + "</span><br>" +
-       "<strong>"+dict[category2]+":</strong> <span style='color:#47ffb5'>" + d[1] + "</span>";
-  })
+  function position(d) {
+    var v = dragging[d];
+    return v == null ? x(d) : v;
+  }
 
-  circles.on('mouseover', tip.show)
-      .on('mouseout', tip.hide)
+  function transition(g) {
+    return g.transition().duration(500);
+  }
 
-  svg.call(tip);
+  // Returns the path for a given data point.
+  function path(d) {
+    return line(labels.map(function(p) { return [position(p), y[p](d[labels.indexOf(p)])]; }));
+  }
+
+  // function brushstart() {
+  //   d3.event.sourceEvent.stopPropagation();
+  // }
+
+  // // Handles a brush event, toggling the display of foreground lines.
+  // function brush() {
+  //   var actives = labels.filter(function(p) { return !y[p].brush.empty(); }),
+  //       extents = actives.map(function(p) { return y[p].brush.extent(); });
+  //   foreground.style("display", function(d) {
+  //     return actives.every(function(p, i) {
+  //       return extents[i][0] <= d[p] && d[p] <= extents[i][1];
+  //     }) ? null : "none";
+  //   });
+  // }
 }
 
 // wrapper function to kick off whole process

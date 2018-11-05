@@ -172,7 +172,6 @@ ul ul a {
 }
 
 /* Scatterplot Styling */
-
 .frame {
   fill: none;
 }
@@ -181,4 +180,16 @@ ul ul a {
   font-weight: bold;
   text-transform: capitalize;
   color: #47ffb5;
+}
+
+/* PC Styling */
+.background path {
+  fill: none;
+  stroke: #ddd;
+  shape-rendering: crispEdges;
+}
+
+.foreground path {
+  fill: none;
+  stroke: steelblue;
 }
