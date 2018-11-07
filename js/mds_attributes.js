@@ -104,7 +104,7 @@ function processData(data){
       .attr("y", 0 - (margin.top / 2))
       .attr("text-anchor", "middle")
       .style("font-size", "20px")
-      .text("MDS Plot For Data");
+      .text("MDS Plot For Attributes");
  
   // Add the data points
   var circles = svg.selectAll("circle")
