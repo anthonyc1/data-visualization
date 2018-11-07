@@ -17,6 +17,22 @@ function createArray(dict) {
   return arr;
 }
 
+// function getXs(vectors) {
+//   var arr = [];
+//   for (var i = 0; i < vectors.length; i++) {
+//     arr.push(vectors[i][2]);
+//   }
+//   return arr;
+// }
+
+// function getYs(vectors) {
+//   var arr = [];
+//   for (var i = 0; i < vectors.length; i++) {
+//     arr.push(vectors[i][3]);
+//   }
+//   return arr;
+// }
+
 function processXAxisDict() {
   var dict = {};
 
@@ -58,6 +74,9 @@ function processData(data){
        [0, 0, 11.414745131493651, -6.5149168579586245, 'year_of_sale'],
        [0, 0, 21753788.307240155, -317.24158375262357, 'sale_price']
     ];
+
+  // var arr_x = getXs(vectors);
+  // var arr_y = getYs(vectors);
 
   // Set graph dimensions and margins
   var margin = {top: 40, right: 20, bottom: 40, left: 40},
