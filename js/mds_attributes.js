@@ -129,7 +129,7 @@ function processData(data){
     .attr('class', 'd3-tip')
     .offset([-10, 0])
     .html(function(d, i) {
-      return "<strong>Data point:</strong> <span style='color:#47ffb5'>" + dict[i] + "</span><br>" + 
+      return "<strong>Attribute:</strong> <span style='color:#47ffb5'>" + dict[i] + "</span><br>" + 
         "<strong>Coord. 1:</strong> <span style='color:#47ffb5'>" + d[0] + "</span><br>" + 
         "<strong>Coord. 2:</strong> <span style='color:#47ffb5'>" + d[1] + "</span>";
   })
